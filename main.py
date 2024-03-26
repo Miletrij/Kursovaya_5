@@ -1,12 +1,16 @@
 from utils.user_interaction import user_interaction, delete_database, create_database
 from src.db_manager import DBManager
+import json
+from path_database_ini import FILE2
 
 db_name = input("Введите название базы данных:\n")
 create_database(db_name)
 db_manager = DBManager(db_name)
-user_input = input("Введите название компаний через запятую для просмотра.\n"
-                   "Если вакансии не указаны, программа вернет 10 первых.\n").split(",")
-user_interaction(user_input, db_name)
+# user_input = input("Введите название компаний через запятую для просмотра.\n"
+#                    "Если вакансии не указаны, программа вернет 10 первых.\n").split(",")
+with open(FILE2, encoding="utf-8") as file:
+    employer_list = json.load(file)
+user_interaction(employer_list, db_name)
 print("Список компаний сохранен в базе данных\n")
 
 try:
@@ -46,6 +50,6 @@ try:
             break
 finally:
     db_manager.conn.close()
-    # print("Удаление БД.\n")
-    # delete_database(db_name)
+    print("Удаление БД.\n")
+    delete_database(db_name)
     print("All good!")
